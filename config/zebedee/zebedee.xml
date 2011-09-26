@@ -8,7 +8,7 @@
 /* ========================================================================== */
 /*
     zebedee.xml
-    part of the Postfix package for pfSense
+    part of the Zebedee package for pfSense
     Copyright (C) 2010 Erik Fonnesbeck
     Copyright (C) 2011 Marcello Coutinho
     Copyright (C) 2011 Jorge Lustosa
@@ -124,7 +124,7 @@
 		</tab>
 		<tab>
 			<text>View log files</text>
-			<url>/zebedee_view_log.php</url>
+			<url>/zebedee_log.php</url>
 		</tab>
 </tabs>
 	<fields>
@@ -145,6 +145,15 @@
 			<type>interfaces_selection</type>
 			<required/>
 			<default_value>WAN</default_value>
+		</field>
+		<field>
+			<fielddescr>External Address</fielddescr>
+			<fieldname>external_address</fieldname>
+			<type>input</type>
+			<size>60</size>
+			<description>
+				This specifies the external name are put in client.zbd file in field serverhost. Ex: 200.111.111.22 or zebedee.pfsense.org   
+			</description>
 		</field>
 		<field>
 			<fielddescr>Verbosity</fielddescr>

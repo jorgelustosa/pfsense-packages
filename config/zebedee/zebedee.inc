@@ -71,20 +71,20 @@ keygenlevel {$zebedee_config['keygenlevel']}
 compression {$zebedee_config['compression']}:{$zebedee_config['compression_level']}
 keylength   {$zebedee_config['keylength']}
 keylifetime {$zebedee_config['keylifetime']}
-maxbufsize  {$zebedee_config['maxbufsize']}	
-checkidfile '/usr/local/etc/clients.id'   # Arquivo de chaves publicas
+maxbufsize  {$zebedee_config['maxbufsize']}
+logfile     '/var/log/zebedee.log'   
+checkidfile '/usr/local/etc/clients.id'   
 include     '/usr/local/etc/tunnels.zbd'
 EOF;
 
 	fwrite($fd, $cfg_file);
 	fclose($fd);
 
-	//"logfile     '/var/log/zbd/TRF.log' # Arquivo de LOG " ; 
-	
-	
-//	print_r($zebedee_config) ; 
-	
-//	exit ; 
+	// manual restart of zebede
+	exec("/usr/local/etc/rc.d/zebedee.sh ") ;
+	//system('/usr/local/etc/rc.d/zebedee.sh'); 
+//	system('/usr/bin/killall zebedee');
+//	system('/usr/local/bin/zebedee -t -f /usr/local/etc/server.zbd');
 	
 	
 }
@@ -123,10 +123,6 @@ function zebedee_key()
 	global $config;
 
 	$zebedee_config=$config['installedpackages']['zebedeekeys']['config'];
-	
-	//print_r($_REQUEST) ; 
-	//$_REQUEST['id'] = $_REQUEST['id'] -1  ;
-	
 	$priv = exec("cat /usr/local/etc/zebedee/".$_REQUEST['id'].".priv") ; 
 	
 	if(!$priv)
@@ -148,6 +144,19 @@ function zebedee_key()
 		
 		write_config();
 	
+	// write clients.id file 
+	foreach ($config['installedpackages']['zebedeekeys']['config'] as $key)
+	{ 
+		$clients .= $key["public_key"]." ".$key["ident"]."\n" ; 
+	}	
+
+	$fd = fopen("/usr/local/etc/clients.id", "w");
+$cfg_file = <<<EOF
+{$clients}
+EOF;
+	fwrite($fd, $cfg_file);
+	fclose($fd);
+
 	// redirect 
 	header("Location: zebedee_keys.php");
 	
@@ -160,15 +169,10 @@ function zebedee_start(){
 	global $config;
 	$start=<<<EOF
 	
-	sysctl kern.ipc.nmbclusters=65536
-	sysctl kern.ipc.somaxconn=16384
-	sysctl kern.maxfiles=131072
-	sysctl kern.maxfilesperproc=104856
-	sysctl kern.threads.max_threads_per_proc=4096
-	/usr/local/sbin/zebedee start
+	/usr/local/bin/zebedee -t -f /usr/local/etc/server.zbd
 	
 EOF;
-	$stop = "/usr/local/sbin/zebedee stop\n";
+	$stop = "killall zebedee stop\n";
 	log_error("Writing rc_file");		
 	write_rcfile(array("file" => "zebedee.sh", "start" => $start, "stop" => $stop));
 
@@ -178,8 +182,8 @@ EOF;
 	if ($config['installedpackages']['zebedee']['config'][0]['enable_zebedee']){
 		log_error("Reloading/starting zebedee");
 		system('/bin/chmod +x /usr/local/etc/rc.d/zebedee.sh');
-		mwexec_bg("/usr/local/sbin/zebedee reload || /usr/local/etc/rc.d/postfix.sh start");
-		log_error("Postfix setup completed");
+		mwexec_bg("/usr/local/etc/rc.d/zebedee.sh start");
+		log_error("Zebedee setup completed");
 		}
 	else{
 		log_error("Stopping zebedee");

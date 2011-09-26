@@ -71,7 +71,7 @@
 		</tab>
 		<tab>
 			<text>View log files</text>
-			<url>/zebedee_view_log.php</url>
+			<url>/zebedee_log.php</url>
 		</tab>
 	</tabs>
 	<fields>

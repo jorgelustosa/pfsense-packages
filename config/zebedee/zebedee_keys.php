@@ -30,6 +30,8 @@
 	POSSIBILITY OF SUCH DAMAGE.
 */
 
+
+
 require("guiconfig.inc");
 
 $pfSversion = str_replace("\n", "", file_get_contents("/etc/version"));
@@ -39,7 +41,7 @@ if(strstr($pfSversion, "1.2"))
 $pgtitle = "Zebedee Tunneling";
 include("head.inc");
 
-
+error_reporting(0); 
 ?>
 <body link="#0000CC" vlink="#0000CC" alink="#0000CC">
 <?php include("fbegin.inc"); ?>
@@ -70,6 +72,7 @@ include("head.inc");
 	
 	$zebede_keys = $config['installedpackages']['zebedeekeys']['config'] ; 
 	$next_row = sizeof($zebede_keys) ;  
+	if($next_row == 1)$next_row =0 ;  
 	
 ?>
 		</td>
@@ -96,10 +99,10 @@ include("head.inc");
 		</tr>
 			  <?php $i = 0; foreach ($zebede_keys as $key): ?>
 		<tr>
-		<td class="listlr gray">
+		<td class="listlr">
 			<?=htmlspecialchars($key['ident']);?>
 		</td>
-		<td class="listr gray">
+		<td class="listr">
 			<?=htmlspecialchars($key['public_key']);?>
 		</td>
 		<td class="list" nowrap>

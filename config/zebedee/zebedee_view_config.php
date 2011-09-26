@@ -1,8 +1,8 @@
 <?php
 /*
-	varnishstat_view_logs.php
+	varnish_view_config.php
 	part of pfSense (http://www.pfsense.com/)
-	Copyright (C) 2006 Scott Ullrich <sullrich@gmail.com>
+	Copyright (C) 2010 Scott Ullrich <sullrich@gmail.com>
 	All rights reserved.
 
 	Redistribution and use in source and binary forms, with or without
@@ -29,41 +29,15 @@
 
 require("guiconfig.inc");
 
-if($_REQUEST['getactivity']) {
-	$varnishstatlogs = `cat  /var/log/zebedee.log`; 
-	echo "<h2>Zebedee Server logs as of " . date("D M j G:i:s T Y")  . "</h2>";
-	echo $varnishstatlogs;
-	exit;
-}
-
 $pfSversion = str_replace("\n", "", file_get_contents("/etc/version"));
 if(strstr($pfSversion, "1.2"))
 	$one_two = true;
 
-$pgtitle = "Zebedee: Logs";
+$pgtitle = "Zebedee: View Configuration";
 include("head.inc");
 
 ?>
 <body link="#0000CC" vlink="#0000CC" alink="#0000CC">
-<script src="/javascript/scriptaculous/prototype.js" type="text/javascript"></script>
-	<script type="text/javascript">
-		function getlogactivity() {
-			var url = "/zebedee_log.php";
-			var pars = 'getactivity=yes';
-			var myAjax = new Ajax.Request(
-				url,
-				{
-					method: 'post',
-					parameters: pars,
-					onComplete: activitycallback
-				});
-		}
-		function activitycallback(transport) {
-			$('varnishstatlogs').innerHTML = '<font face="Courier"><pre>' + transport.responseText  + '</pre></font>';
-			setTimeout('getlogactivity()', 2500);		
-		}
-		setTimeout('getlogactivity()', 1000);	
-	</script>
 <?php include("fbegin.inc"); ?>
 
 <?php if($one_two): ?>
@@ -72,20 +46,20 @@ include("head.inc");
 
 <?php if ($savemsg) print_info_box($savemsg); ?>
 
+<form action="zebedee_view_config.php" method="post">
+	
 <div id="mainlevel">
 	<table width="100%" border="0" cellpadding="0" cellspacing="0">
 		<tr><td>
 <?php
-
-$tab_array = array();
+		$tab_array = array();
 	$tab_array[] = array(gettext("Settings"), false, "/pkg_edit.php?xml=zebedee.xml&amp;id=0");
 	$tab_array[] = array(gettext("Tunnels"), false, "/pkg_edit.php?xml=zebedee_tunnels.xml&amp;id=0");
 	$tab_array[] = array(gettext("Keys"), false, "/zebedee_keys.php");
 	$tab_array[] = array(gettext("XMLRPC Sync"), false, "/pkg_edit.php?xml=zebedee_sync.xml&amp;id=0");
-	$tab_array[] = array(gettext("View Configuration"), false, "/zebedee_view_config.php");
-	$tab_array[] = array(gettext("View log files"), true, "/zebedee_log.php");
+	$tab_array[] = array(gettext("View Configuration"), true, "/zebedee_view_config.php");
+	$tab_array[] = array(gettext("View log files"), false, "/zebedee_log.php");
 	display_top_tabs($tab_array);
-
 ?>
 		</td></tr>
  		<tr>
@@ -94,11 +68,22 @@ $tab_array = array();
 					<table class="tabcont" width="100%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
      						<td class="tabcont" >
-      							<form action="zebedee_log.php" method="post">
-								<div id="varnishstatlogs">
-									<pre>One moment please, loading logs...</pre>
-								</div>
-     						</td>
+     								<p class="pgtitle">/usr/local/etc/server.zbd</font></p>
+									<textarea id="zebedeetext" rows="20" cols="100%">
+<?php 
+	$config_file = file_get_contents("/usr/local/etc/server.zbd");
+	echo $config_file;
+?>
+									</textarea>
+									<p class="pgtitle">/usr/local/etc/tunnels.zbd</font></p>
+									<textarea id="zebedeetext" rows="20" cols="100%">
+<?php 
+	$config_file = file_get_contents("/usr/local/etc/tunnels.zbd");
+	echo $config_file;
+?>
+									</textarea>
+									
+							</td>
 						</tr>
 					</table>
 				</div>
