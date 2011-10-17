@@ -69,14 +69,14 @@ include("head.inc");
 						<tr>
      						<td class="tabcont" >
      								<p class="pgtitle">/usr/local/etc/server.zbd</font></p>
-									<textarea id="zebedeetext" rows="20" cols="100%">
+									<textarea id="zebedeetext" rows="20" cols="80">
 <?php 
 	$config_file = file_get_contents("/usr/local/etc/server.zbd");
 	echo $config_file;
 ?>
 									</textarea>
 									<p class="pgtitle">/usr/local/etc/tunnels.zbd</font></p>
-									<textarea id="zebedeetext" rows="20" cols="100%">
+									<textarea id="zebedeetext" rows="20" cols="80">
 <?php 
 	$config_file = file_get_contents("/usr/local/etc/tunnels.zbd");
 	echo $config_file;

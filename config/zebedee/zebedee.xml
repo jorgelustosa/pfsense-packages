@@ -66,38 +66,43 @@
 		<chmod>0755</chmod>
 	</additional_files_needed>
 	<additional_files_needed>
-		<item>http://www.pfsense.org/packages/config/postfix/postfix_acl.xml</item>
+		<item>http://www.pfsense.org/packages/config/zebedee/zebedee_tunnels.xml</item>
 		<prefix>/usr/local/pkg/</prefix>
 		<chmod>0755</chmod>
 	</additional_files_needed>
 	<additional_files_needed>
-		<item>http://www.pfsense.org/packages/config/postfix/postfix_recipients.xml</item>
+		<item>http://www.pfsense.org/packages/config/zebedee/zebedee_key_details.xml</item>
 		<prefix>/usr/local/pkg/</prefix>
 		<chmod>0755</chmod>
 	</additional_files_needed>
 	<additional_files_needed>
-		<item>http://www.pfsense.org/packages/config/postfix/postfix_antispam.xml</item>
-		<prefix>/usr/local/pkg/</prefix>
-		<chmod>0755</chmod>
-	</additional_files_needed>
-	<additional_files_needed>
-		<item>http://www.pfsense.org/packages/config/postfix/postfix_sync.xml</item>
+		<item>http://www.pfsense.org/packages/config/zebedee/zebedee_sync.xml</item>
 		<prefix>/usr/local/pkg/</prefix>
 		<chmod>0755</chmod>
 	</additional_files_needed>
 		<additional_files_needed>
-		<item>http://www.pfsense.org/packages/config/postfix/postfix_view_config.php</item>
+		<item>http://www.pfsense.org/packages/config/zebedee/zebedee_del_key.php</item>
 		<prefix>/usr/local/www/</prefix>
 		<chmod>0755</chmod>
 	</additional_files_needed>
 	<additional_files_needed>
-		<item>http://www.pfsense.org/packages/config/postfix/postfix_recipients.php</item>
+		<item>http://www.pfsense.org/packages/config/zebedee/zebedee_keys.php</item>
 		<prefix>/usr/local/www/</prefix>
 		<chmod>0755</chmod>
 	</additional_files_needed>
 	<additional_files_needed>
-		<item>http://www.pfsense.org/packages/config/postfix/adexport.pl</item>
-		<prefix>/usr/local/etc/postfix/</prefix>
+		<item>http://www.pfsense.org/packages/config/zebedee/zebedee_log.php</item>
+		<prefix>/usr/local/www/</prefix>
+		<chmod>0755</chmod>
+	</additional_files_needed> 
+	<additional_files_needed>
+		<item>http://www.pfsense.org/packages/config/zebedee/zebedee_view_config.php</item>
+		<prefix>/usr/local/www/</prefix>
+		<chmod>0755</chmod>
+	</additional_files_needed>
+	<additional_files_needed>
+		<item>http://www.pfsense.org/packages/config/zebedee/zebedee.sh</item>
+		<prefix>/usr/local/etc/rc.d/</prefix>
 		<chmod>0755</chmod>
 	</additional_files_needed>
 <tabs>

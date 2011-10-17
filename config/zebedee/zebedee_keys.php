@@ -71,9 +71,11 @@ error_reporting(0);
 	display_top_tabs($tab_array);
 	
 	$zebede_keys = $config['installedpackages']['zebedeekeys']['config'] ; 
-	$next_row = sizeof($zebede_keys) ;  
-	if($next_row == 1)$next_row =0 ;  
+	$next_row = sizeof($zebede_keys) ;
+	if($next_row == 1 && !array_key_exists("config", $config['installedpackages']["zebedeekeys"]))$next_row =0 ;
 	
+	//echo "<pre>" ;  
+	//print_r($config['installedpackages']); 
 ?>
 		</td>
 		</tr>
@@ -108,9 +110,8 @@ error_reporting(0);
 		<td class="list" nowrap>
 		<a href="pkg_edit.php?xml=zebedee_key_details.xml&id=<?php echo $i?>">
 		<img src="./themes/<?= $g['theme']; ?>/images/icons/icon_e.gif" title="<?=gettext("edit key"); ?>" width="17" height="17" border="0"></a>
-		<a onclick="return confirm('Do you really want to delete this item?')" href="/zebedee_del_key.php?id=<?php echo $i?>"><img height="17" border="0" width="17" src="./themes/pfsense_ng/images/icons/icon_x.gif"></a>
-		<a alt="Download client.zbd file" onclick="return confirm('Do you really want to delete this item?')" href="/zebedee_del_key.php?id=<?php echo $i?>"><img height="17" border="0" width="17" src="./themes/pfsense_ng/images/icons/icon_right.gif" alt="Download client.zbd file"></a>
-		
+		<a href="/zebedee_del_key.php?id=<?php echo $i?>"><img height="17" border="0" width="17" src="./themes/pfsense_ng/images/icons/icon_x.gif"></a>
+		<a alt="Download client.zbd file"  href="/zebedee_get_key.php?id=<?php echo $i?>" target="_blank"><img height="17" border="0" width="17" src="./themes/pfsense_ng/images/icons/icon_right.gif" alt="Download client.zbd file"></a>
 		</td>
 				</tr>
 			  <?php $i++; endforeach; ?>

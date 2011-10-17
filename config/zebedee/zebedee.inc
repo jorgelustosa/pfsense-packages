@@ -80,12 +80,8 @@ EOF;
 	fwrite($fd, $cfg_file);
 	fclose($fd);
 
-	// manual restart of zebede
-	exec("/usr/local/etc/rc.d/zebedee.sh ") ;
-	//system('/usr/local/etc/rc.d/zebedee.sh'); 
-//	system('/usr/bin/killall zebedee');
-//	system('/usr/local/bin/zebedee -t -f /usr/local/etc/server.zbd');
-	
+	// manual restart of zebede 
+	mwexec_bg("/usr/local/etc/rc.d/zebedee.sh");
 	
 }
 
@@ -113,6 +109,8 @@ EOF;
 	fwrite($fd, $cfg_file);
 	fclose($fd);
 	
+	// manual restart of zebede
+	mwexec_bg("/usr/local/etc/rc.d/zebedee.sh");
 	
 }
 
@@ -167,29 +165,10 @@ EOF;
 
 function zebedee_start(){
 	global $config;
-	$start=<<<EOF
 	
-	/usr/local/bin/zebedee -t -f /usr/local/etc/server.zbd
+	//need be implemented
 	
-EOF;
-	$stop = "killall zebedee stop\n";
-	log_error("Writing rc_file");		
-	write_rcfile(array("file" => "zebedee.sh", "start" => $start, "stop" => $stop));
-
-	conf_mount_ro();
-
-	sleep(1);
-	if ($config['installedpackages']['zebedee']['config'][0]['enable_zebedee']){
-		log_error("Reloading/starting zebedee");
-		system('/bin/chmod +x /usr/local/etc/rc.d/zebedee.sh');
-		mwexec_bg("/usr/local/etc/rc.d/zebedee.sh start");
-		log_error("Zebedee setup completed");
-		}
-	else{
-		log_error("Stopping zebedee");
-		mwexec("/usr/local/etc/rc.d/zebedee.sh stop");
-		system('/bin/chmod -x /usr/local/etc/rc.d/zebedee.sh');
-		}
+	
 }
 
 function zebedee_validate_input($post, &$input_errors) {
@@ -224,7 +203,10 @@ function zebedee_php_install_command() {
 }
 
 function zebedee_php_deinstall_command() {
-	mwexec("/usr/local/etc/rc.d/zebedee.sh stop");
+	
+	
+	mwexec_bg("killall -9 zebedee");
+	
 	sleep(1);
 	conf_mount_rw();
 	unlink_if_exists("/usr/local/etc/rc.d/zebedee.sh");
@@ -234,7 +216,7 @@ function zebedee_php_deinstall_command() {
 /* Uses XMLRPC to synchronize the changes to a remote node */
 function zebedee_sync_on_changes() {
 	global $config, $g;
-	log_error("[zebedee] postfix_xmlrpc_sync.php is starting.");
+	log_error("[zebedee] zebedee xml_rpc is starting.");
 	$synconchanges = $config['installedpackages']['zebedeesync']['config'][0]['synconchanges'];	
 	if(!$synconchanges) 
 		return;
@@ -276,10 +258,10 @@ function zebedee_do_xmlrpc_sync($sync_to_ip, $password) {
 
 	/* xml will hold the sections to sync */
 	$xml = array();
-	$xml['zebedee'] = $config['installedpackages']['postfix'];
-	$xml['zebedeeacl'] = $config['installedpackages']['postfixacl'];
-	$xml['zebedeerecipients'] = $config['installedpackages']['postfixrecipients'];
-	$xml['zebedeeantispam'] = $config['installedpackages']['postfixantispam'];
+	$xml['zebedee'] = $config['installedpackages']['zebedee'];
+	$xml['zebedeetunnels'] = $config['installedpackages']['zebedeetunnels'];
+	$xml['zebedeekeys'] = $config['installedpackages']['zebedeekeys'];
+	$xml['zebedeesync'] = $config['installedpackages']['zebedeesync'];
 	
 	/* assemble xmlrpc payload */
 	$params = array(
@@ -301,7 +283,7 @@ function zebedee_do_xmlrpc_sync($sync_to_ip, $password) {
 	if(!$resp) {
 		$error = "A communications error occurred while attempting zebedee XMLRPC sync with {$url}:{$port}.";
 		log_error($error);
-		file_notice("sync_settings", $error, "Postfix Settings Sync", "");
+		file_notice("sync_settings", $error, "Zebedee Settings Sync", "");
 	} elseif($resp->faultCode()) {
 		$cli->setDebug(1);
 		$resp = $cli->send($msg, "250");
@@ -309,7 +291,7 @@ function zebedee_do_xmlrpc_sync($sync_to_ip, $password) {
 		log_error($error);
 		file_notice("sync_settings", $error, "Postfix Settings Sync", "");
 	} else {
-		log_error("Postfix XMLRPC sync successfully completed with {$url}:{$port}.");
+		log_error("Zebedee XMLRPC sync successfully completed with {$url}:{$port}.");
 	}
 	
 	/* tell zebedee to reload our settings on the destionation sync host. */

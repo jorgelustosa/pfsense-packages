@@ -30,7 +30,7 @@
 require("guiconfig.inc");
 
 if($_REQUEST['getactivity']) {
-	$varnishstatlogs = `cat  /var/log/zebedee.log`; 
+	$varnishstatlogs = `tail -n 100  /var/log/zebedee.log`; 
 	echo "<h2>Zebedee Server logs as of " . date("D M j G:i:s T Y")  . "</h2>";
 	echo $varnishstatlogs;
 	exit;
